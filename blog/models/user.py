@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from blog import db, loginmanager
+from blog import loginmanager
 from blog.models.base import Base
 
 
@@ -13,7 +13,7 @@ class User(Base, UserMixin):
     nickname = Column(String(30))
     info = Column(String(128))
     email = Column(String(50), nullable=False)
-    phone_number = Column(db.String(20), unique=True)
+    phone_number = Column(String(20), unique=True)
 
     articles = relationship('Article', back_populates='author')
 

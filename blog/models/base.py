@@ -1,6 +1,6 @@
 # coding = utf-8
 from contextlib import contextmanager
-from datetime import datetime, timezone,timedelta
+from datetime import datetime,timedelta
 
 from flask_sqlalchemy import BaseQuery
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
