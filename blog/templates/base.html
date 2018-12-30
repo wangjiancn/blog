@@ -1,0 +1,64 @@
+{% from 'macros/form.html' import render_form %}
+{% from 'macros/nav.html' import render_nav_item %}
+{% from 'macros/nav.html' import render_breadcrumb_item %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}专注于Python-wang的博客{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% block description %}一个专注于Python的博客{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}Python,Python入门,Flask学习,专注于Python{% endblock %}">
+  <meta name="author" content="wangjian">
+  <meta name="robots" content="index,follow">
+  <meta name="application-name" content="py1.top">
+  <link rel="icon" href="{{ url_for('static',filename = 'icon/fav.png') }}">
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  {% block head %}{% endblock %}
+  <script src="https://cdn.bootcss.com/popper.js/1.14.6/esm/popper.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+{% block nav_top %}
+  <nav id="top" role="navigation" class="navbar navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand"><img height="150%"
+                                              src="{{ url_for('static',filename = 'icon/fav.png') }}"
+                                              alt=""></a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          {{ render_nav_item('blog.index','主页',use_li = False) }}
+          {{ render_nav_item('blog.post', '文章',use_li = False) }}
+          {{ render_nav_item('blog.message', '留言板',use_li = False) }}
+          {{ render_nav_item('blog.about', '关于',use_li = False) }}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if not current_user.is_authenticated %}
+            {{ render_nav_item('blog.login','登陆',use_li = False,next=request.path) }}
+            {{ render_nav_item('blog.register','立即注册',use_li = False) }}
+          {% else %}
+            {{ render_nav_item('blog.new_post_markdown','写文章',use_li=False, target='_blank') }}
+            {{ render_nav_item('blog.personal','个人中心',use_li = False) }}
+            {{ render_nav_item('blog.logout','注销',use_li = False,next=request.path) }}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+{% endblock %}
+{% block content %}
+{% endblock %}
+<footer>
+  <div class="container">
+    <div id="footer" class="text-center text-muted">
+      © 2018-2018 Create By Wang ICP证：<a class="text-muted" href="http://www.miitbeian.gov.cn/" rel="nofollow"
+                                         target="_blank">浙ICP备18036071号</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

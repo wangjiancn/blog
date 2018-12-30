@@ -1,0 +1,38 @@
+{% from 'macros/nav.html' import render_nav_item %}
+<div class="card">
+  <h4 class="card-header">文章分类</h4>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="list-unstyled">
+          <li class="text-center"><a href="{{ url_for('blog.post') }}">所有文章</a></li>
+          {% for item in category %}
+            {% if loop.index is even %}
+              <li class="text-center"><a href="{{ url_for('blog.post',category = item.id) }}">{{ item.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-unstyled">
+          {% for item in category %}
+            {% if loop.index is odd %}
+              <li class="text-center"><a href="{{ url_for('blog.post',category = item.id) }}">{{ item.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h4 class="card-header">文章标签</h4>
+  <div class="card-body">
+    {% for item in tags %}
+      <a href="{{ url_for('blog.post',tag = item.id) }}" class="btn tag_btn
+      {%- if (request.args.get('tag')|int) == item.id %} active {% endif -%}">{{ item.name }}
+        <span class="badge-tag">{{ item.articles|length }}</span></a>
+    {% endfor %}
+  </div>
+</div>

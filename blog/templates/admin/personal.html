@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% from 'macros/nav.html' import nav_args_item, ns with context %}
+{% block head %}
+  <link href="/static/css/content.css">
+{% endblock %}
+{% block content %}
+  <section class="container">
+    <div class="col-lg-2">
+      <nav class="nav nav-pills nav-stacked">
+        <li class="disabled"><a><span class="glyphicon glyphicon-user"></span> 个人中心</a></li>
+        {{ nav_args_item('i','info','我的信息',blank = True,span="glyphicon glyphicon-home
+") }}
+        {{ nav_args_item('i','post','我的文章',span="glyphicon glyphicon-book
+") }}
+        {{ nav_args_item('i','comment','我的评论',span="glyphicon glyphicon-comment
+") }}
+        {{ nav_args_item('i','message','我的留言',span="glyphicon glyphicon-edit
+") }}
+        {{ nav_args_item('i','news','我的消息',span="glyphicon glyphicon-envelope
+" ) }}
+      </nav>
+    </div>
+    <div class="col-lg-10">
+      {% set query = request.args.get('i') if request.args.get("i") in ns.arglist else "info" %}
+      {% set tem = "admin/_" + query +".html" %}
+      {% include tem %}
+    </div>
+  </section>
+{% endblock %}

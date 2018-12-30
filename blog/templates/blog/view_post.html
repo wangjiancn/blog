@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="/static/editMD/css/editormd.css">
+  <link rel="stylesheet" href="/static/css/content.css">
+  <link rel="stylesheet" href="/static/css/styles/xcode.css">
+{% endblock %}
+{% block content %}
+  <section class="container-fluid" data-spy="scroll" data-target="#article-toc">
+    <aside class="col-lg-2">
+      <div id="autoMenu" class="autoMenu hidden-xs hidden-sm" data-autoMenu></div>
+    </aside>
+    {#  -- article start -- #}
+    <div class="col-lg-8">
+      <article>
+        <h1 class="text-center">{{ article.title }}</h1>
+        <div class="entry-meta">
+          <small class="text-muted">创建日期:{{ article.create_datetime }} 作者:{{ article.author.nickname }} 分类:<a
+                  href="{{ url_for('blog.post',category=article.category.id) }}"
+                  class="text-muted">{{ article.category.name }}</a>
+            {% if article.tags %}
+              标签:
+              {% for tag in article.tags %}
+                <a class="text-muted" href="{{ url_for("blog.post",tag=tag.id) }}" rel="tag"
+                   title="标签">{{ tag.name }}  </a>
+              {% endfor %}
+            {% endif %}
+
+            {% if article.author_id == current_user.id %}
+              <a href="{{ url_for('blog.edit_post_markdown',postID=article.id) }}"> 编辑此文</a>{% endif %}
+          </small>
+        </div>
+        <div class="content">
+          {{ article.body|safe }}
+        </div>
+      </article>
+
+      {#  --article end -- comment started -- #}
+      <div id='comment' class="article-comment">
+        {% if current_user.is_authenticated %}
+          <form action="" method="post">
+            <div class="form-group">
+              {{ form.csrf_token }}
+              {{ form.body(class='form-control',row=3,placeholder="留下你的足迹...") }}<br>
+              {{ form.submit_comment(class='btn btn-primary') }}
+              {% for error in form.errors %}
+                <small class="cm-error">{{ error }}</small>
+              {% endfor %}
+              {% for flash in get_flashed_messages() %}
+                <div class="has-success">{{ flash }}</div>
+              {% endfor %}
+            </div>
+          </form>
+        {% else %}
+          <div class="panel panel-default" style="height: 100px">
+            <div class="" style="padding-top: 30px;padding-left: 35%">
+              <a href="{{ url_for('blog.login',next=request.path) }}" class="btn btn-default"
+                 style="">登录后评论</a>
+              <a href="{{ url_for('blog.register',next=request.path) }}" class="btn btn-primary"
+                 style="">注册新用户</a>
+            </div>
+          </div>
+        {% endif %}
+        <div class="comments-list">
+          {% if comments %}
+            <p class="h4">评论列表:</p>
+            <ul class="list-group">
+              {% for item in comments %}
+                <li class="list-group-item">
+                  <p>{{ item.user.username }}评论于{{ item.create_datetime }}</p>
+                  {{ item.body }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>暂无评论</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="/static/js/jquery.autoMenu.js"></script>
+  <script src="/static/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}

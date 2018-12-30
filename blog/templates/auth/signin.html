@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container">
+    <form action="" method="post" class="center-block" style="width: 50%">
+      <div class="form-group col-lg-12">
+        {% with auth_error = get_flashed_messages(category_filter=["auth_error"]) %}
+          {% if auth_error %}
+            <div class="form-group alert alert-info alert-dismissible " role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                      aria-hidden="true">&times;</span>
+              </button>
+              {%- for msg in auth_error %}
+                <strong>{{ msg }}</strong>
+              {% endfor -%}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {{ form.csrf_token }}
+        {{ form.username.label(class='form-control-label') }}
+        {{ form.username(class='form-control') }}
+        {% for error in form.username.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="form-group col-lg-12">
+        {{ form.password.label(class='form-control-label') }}
+        {{ form.password(class='form-control') }}
+        {% for error in form.password.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="form-group  col-lg-12">
+        {{ form.remember(class='form-check-label') }}
+        {{ form.remember.label(class='form-check') }}
+      </div>
+      <div class="form-group col-lg-12">
+        <div class="form-group col-lg-3" style="padding-left: 0px">
+          {{ form.submit_login(class='btn btn-block btn-primary' ) }}
+        </div>
+        <div class="form-group col-lg-offset-2 col-lg-3" style="padding-left: 0px">
+          <a class="btn btn-link" href="{{ url_for('blog.register') }}">忘记密码?>></a>
+        </div>
+        <div class="form-group  col-lg-2" style="padding-left: 0px">
+          <a class="btn btn-link" href="{{ url_for('blog.register') }}">没有账号，点击注册>></a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

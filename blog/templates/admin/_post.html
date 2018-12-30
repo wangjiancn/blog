@@ -1,0 +1,27 @@
+<section>
+  <header class="h2 text-center">我的文章</header>
+  {% if post %}
+    {% for item in post %}
+      <div class="container-fluid">
+        <div class="col-lg-10">
+          <li class="list-group-item">
+            <a href="{{ url_for('blog.view_post_md',post_id = item.id ) }}"
+               target="_blank">{{ item.title }}</a>
+            <span class="text-right">{% if item.tags %}
+              {% for tag in item.tags %}
+                <small><span class="glyphicon glyphicon-tag"></span>
+                  <a class="text-muted" href="{{ url_for("blog.post",tag=tag.id) }}"
+                     rel="tag" title="标签">{{ tag.name }}  </a></small>
+              {% endfor %}
+            {% endif %}</span>
+          </li>
+        </div>
+        <div class="col-lg-2">
+          <a class="btn btn-default btn-sm" href="{{ url_for('blog.edit_post_markdown',postID=item.id) }}">修改</a>
+          <a class="btn btn-danger btn-sm">删除</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</section>
+

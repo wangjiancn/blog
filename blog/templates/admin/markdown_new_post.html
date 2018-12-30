@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="/static/editMD/css/editormd.css">
+  <link rel="stylesheet" href="/static/css/bootstrap-select.min.css">
+{% endblock %}
+{% block nav_top %}{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+    <form action="" method="post" class="form-horizontal" style="margin-top:20px">
+      {{ form.csrf_token }}
+      <div class="col-lg-5">
+        <div class="form-group">
+          {{ form.title.label(class="col-lg-2 control-label") }}
+          <div class="col-lg-10">
+            {{ form.title(class="form-control") }}
+          </div>
+        </div>
+        <div class="form-group">
+          {{ form.category_field.label(class="col-lg-2 control-label") }}
+          <div class="col-lg-4">
+            {{ form.category_field(class="form-control") }}
+          </div>
+          <div class="col-lg-5">
+            {{ form.tags(class="selectpicker form-control",data_max_options="4",title="选择文章标签") }}
+          </div>
+          <div>
+            <button class="btn btn-default" title="点击创建标签"><span class="glyphicon glyphicon-plus"></span></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="form-group">
+          {{ form.summary.label(class="col-lg-1 control-label") }}
+          <div class="col-lg-10">
+            {{ form.summary(class="form-control",rows="3") }}
+          </div>
+        </div>
+      </div>
+      <div id="article-editormd">
+        {{ form.markdown }}
+        {{ form.body(class="editormd-html-textarea") }}
+      </div>
+    </form>
+  </div>
+  <script src="/static/editMD/editormd.back.js"></script>
+  <script src="/static/js/bootstrap-select.min.js"></script>
+  <script type="text/javascript">
+      var ArticleEditor;
+      var form_submit = {{ form.submit_post(class="btn btn-sm btn-primary")|tojson }};
+      var form_errors = {{ form.errors|tojson }};
+      if (form_errors != null) {
+          var errors = '';
+          for (key in form_errors) {
+              if (key == 'csrf_token') {
+                  errors += ' ' + '<span class=\"label label-danger\">' + '页面过期，请重新提交' + '</span>' + ' ';
+              } else {
+                  errors += ' ' + '<span class=\"label label-danger\">' + form_errors[key] + '</span>' + ' ';
+              }
+          }
+      } else {
+          errors = ''
+      }
+      ;
+      $(function () {
+          ArticleEditor = editormd("article-editormd", {
+              name: "article-body",
+              width: "95%",
+              height: 640,
+              emoji: true,
+              taskList: true,
+              fontsize: "14px",
+              syncScrolling: "single",
+              path: "/static/editMD/lib/",
+              saveHTMLToTextarea: true,
+              imageUpload: true,
+              imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+              imageUploadURL: "/upload",
+              toolbarIcons: function () {
+                  return ["submit", "undo", "redo", "|", "bold", "italic", "del", "hr", "|", "h1", "h2", "h3", "list-ul", "list-ol", "|", "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "errors", "||", "watch", "fullscreen", "preview", "help",]
+              },
+              toolbarCustomIcons: {
+                  submit: form_submit,
+              },
+              toolbarIconTexts: {
+                  errors: errors  // 如果没有图标，则可以这样直接插入内容，可以是字符串或HTML标签
+              },
+          });
+      });
+      $(document).ready(function () {
+          $('.selectpicker').selectpicker()
+          var form_category =
+          {{ form.category_field.data|int(false)|tojson }}
+          if (form_category) {
+              $('#category_field').val(form_category)
+          }
+          var form_tags =
+          {{ form.tags.data|int(false)|tojson }}
+          if (form_tags) {
+              $('.selectpicker').selectpicker('val', form_tags)
+          }
+      });
+
+  </script>
+{% endblock %}

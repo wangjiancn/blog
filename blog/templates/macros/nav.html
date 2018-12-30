@@ -1,0 +1,33 @@
+{#test in Bootstrap 3.2.7#}
+
+{% macro render_nav_item(endpoint, text, class ='',badge='', use_li=False, target = '') %}
+  <li class="{% if request.endpoint and request.endpoint == endpoint %}active{% endif %} {{ class }}">
+    <a class="{% if not use_li %}nav-item{% endif %} "
+       href="{{ url_for(endpoint, **kwargs) }}" {% if target %} target="{{ target }}" {% endif %}
+    > {{ text }} {% if badge %}<span class="badge badge-light">{{ badge }}</span>{% endif %}
+    </a>
+  </li>
+{% endmacro %}
+
+{% macro render_breadcrumb_item(endpoint, text) %}
+  {% set active = True if request.endpoint and request.endpoint == endpoint else False %}
+  <li class="breadcrumb-item {% if active %}active{% endif %}" {% if active %} aria-current="page"{% endif %}>
+    {% if active %}
+      {{ text }}
+    {% else %}
+      <a href="{{ url_for(endpoint, **kwargs) }}">{{ text }}</a>
+    {% endif %}
+  </li>
+{% endmacro %}
+
+{% set ns = namespace(arglist=[]) %}
+{% macro nav_args_item(arg_name,arg_value,content,class="",span="",blank=False) %}
+  {% do ns.arglist.append(arg_value) %}
+  {% set active = True if request.args.get(arg_name) == arg_value else False %}
+  <li class="{% if active %} active {% endif %}
+    {% if blank %}
+      {% if not request.args.get(arg_name) and not active %} active {% endif %}
+    {% endif %}{{ class }}">
+    <a href="?{{ arg_name }}={{ arg_value }}">{% if span %}<span class="{{ span }}"></span>{% endif %} {{ content }}</a>
+  </li>
+{% endmacro %}

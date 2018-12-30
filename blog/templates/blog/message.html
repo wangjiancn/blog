@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from 'macros/pagination.html' import render_pagination with context %}
+
+{% block content %}
+  <div class="container">
+    <div class="row center-block" style="width: 70%">
+      <h5 class="">
+        当前共有{{ pagination.total }}条留言
+      </h5>
+      {% if current_user.is_authenticated %}
+        <form class="form-horizontal" action="{{ url_for('blog.message') }}"
+              method="post">
+          <div class="form-group">{{ form.csrf_token }}
+            {{ form.body(class='form-control form-inline',rows='3') }}<br>
+            {{ form.submit_message(class='btn btn-primary col-lg-2') }}
+            {% for error in form.errors %}
+              <small class="cm-error">{{ error }}</small>
+            {% endfor %}
+            {% for flash in get_flashed_messages() %}
+              <div class="has-success">{{ flash }}</div>
+            {% endfor %}
+          </div>
+        </form>
+      {% else %}
+        <div class="panel panel-default" style="height: 100px">
+          <div class="" style="padding-top: 30px;padding-left: 35%">
+            <a href="{{ url_for('blog.login',next=request.path) }}" class="btn btn-default"
+               style="">登录后评论</a>
+            <a href="{{ url_for('blog.register',next=request.path) }}" class="btn btn-primary"
+               style="">注册新用户</a>
+          </div>
+        </div>
+      {% endif %}
+      <div class="list-group">
+        {% for x in range(messages|length) %}
+          <div class="list-group-item">
+            <p><b style="color:green">{{ 5*(pagination.page-1)+x+1 }}
+              # </b>{{ messages[x].user.username }}创建于{{ messages[x].create_datetime }}</p>
+            <p>{{ messages[x].body }}</p></div>
+        {% endfor %}
+      </div>
+      <div class="text-center ">
+        {{ render_pagination(pagination,align='center') }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
