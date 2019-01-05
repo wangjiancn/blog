@@ -16,4 +16,4 @@ class BaseConfig():
     CKEDITOR_PKG_TYPE = 'standard'
 
     # 文章内图片上传路径
-    UPLOADED_PATH = os.path.normpath(os.path.join(basedir, '..\\resource\\upload'))
+    UPLOADED_PATH = os.path.normpath(os.path.join(basedir, '..' + os.sep + 'resource' + os.sep + 'upload'))
