@@ -91,9 +91,8 @@ def new_post_markdown():
                 article.tags.append(tag)
         db.session.add(article)
         db.session.commit()
-        time.sleep(2.5)
-        new = Article.query.filter_by(author_id=current_user.id).order_by(Article.create_time.desc()).first()
-        return redirect(url_for('blog.view_post_md', post_id=new.id))
+        last_post_id = Article.last_article_id(current_user.id)
+        return redirect(url_for('blog.view_post_md', post_id=last_post_id))
     return render_template('admin/markdown_new_post.html', form=form)
 
 
