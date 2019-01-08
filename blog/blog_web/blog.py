@@ -17,33 +17,21 @@ from . import blog_bp
 
 
 @blog_bp.route('/')
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def index():
     return redirect(url_for('blog.post'))
     # return render_template('blog/home.html')
 
 
 @blog_bp.route('/about')
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def about():
     article = Article.query.get(1)
     return render_template('blog/about.html', article=article)
 
 
 @blog_bp.route('/message', methods=['GET', 'POST'])
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def message():
     page = request.args.get('page', 1, type=int)
     pagination = Message.query.order_by(Message.create_time.desc()).paginate(page, per_page=current_app.config[
@@ -61,11 +49,7 @@ def message():
 
 
 @blog_bp.route('/post')
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def post():
     q = request.args.get('q')
     category_id = request.args.get('category', type=int)
@@ -120,11 +104,7 @@ def faq():
 
 
 @blog_bp.route('/post/<int:post_id>')
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def view_post(post_id):
     # article = Article.query.get_or_404(post_id)
     return redirect(url_for('blog.view_post_md', post_id=post_id))
@@ -132,11 +112,7 @@ def view_post(post_id):
 
 
 @blog_bp.route('/md/<int:post_id>', methods=['GET', 'POST'])
-<<<<<<< HEAD
-@cache.cached(key_prefix=custom_cache_key, timeout=50)
-=======
 @cache.cached(key_prefix=custom_cache_key)
->>>>>>> feat: 集成Flask-Caching[redis]，支持缓存服务
 def view_post_md(post_id):
     article = Article.query.filter_by(id=post_id).first_or_404()
     comments = Comment.query.filter_by(article_id=post_id).order_by(Comment.create_time.desc()).all()
