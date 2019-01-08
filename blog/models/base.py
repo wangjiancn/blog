@@ -1,6 +1,7 @@
 # coding = utf-8
+import time
 from contextlib import contextmanager
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 from flask_sqlalchemy import BaseQuery
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
@@ -53,6 +54,8 @@ class Base(db.Model):
     @property
     def create_datetime(self):
         if self.create_time:
-            return datetime.fromtimestamp(self.create_time) + timedelta(days=-8,hours=8)
+            t = datetime.fromtimestamp(self.create_time) + timedelta(days=-8, hours=8)
+            s = time.strftime("%Y/%m/%d %H:%M", t.timetuple())
+            return s
         else:
             return None

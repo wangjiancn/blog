@@ -46,6 +46,11 @@
             {{ render_nav_item('blog.logout','注销',use_li = False,next=request.path) }}
           {% endif %}
         </ul>
+        <form action="{{ url_for('blog.post') }}" class="navbar-form navbar-right" role="search" method="get">
+          <div class="form-group">
+            <input name="q" type="text" class="form-control" placeholder="按下回车搜索">
+          </div>
+        </form>
       </div>
     </div>
   </nav>

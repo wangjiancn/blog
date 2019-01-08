@@ -32,9 +32,9 @@
                      href="{{ url_for('blog.view_post_md',post_id = article.id) }}"
                      title="{{ article.title }}">{{ article.title }}</a><br>
                   {{ article.create_datetime }} ·
-                  <a href="{{ url_for("blog.post",category = article.category.id) }}"
+                  <a href="{{ url_for("blog.post",category = article.category.id or article.category[0].id) }}"
                      rel="category" title="文章分类"><span class="glyphicon glyphicon-pushpin"></span>
-                    {{ article.category.name }}</a>
+                    {{ article.category.name or article.category[0].name }}</a>
                   {% if article.tags -%}
                     {% for tag in article.tags %}
                       ·<a href="{{ url_for("blog.post",tag=tag.id) }}" rel="tag" title="标签">

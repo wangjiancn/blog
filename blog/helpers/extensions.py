@@ -3,11 +3,12 @@
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_ckeditor import CKEditor
+from flask_caching import Cache
 
 loginmanager = LoginManager()
 mail = Mail()
 ckeditor = CKEditor()
-
+cache = Cache()
 
 def init_login_manager(app):
     loginmanager.init_app(app)

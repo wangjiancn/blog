@@ -42,7 +42,7 @@ def register_commands(app):
         category_background_field = []
 
         def fake_users(count):
-            admin= User(
+            admin = User(
                 username='admin',
                 password='admin',
                 email='hello@qq.com',
@@ -88,7 +88,7 @@ def register_commands(app):
                 tag_background_filed = 'tag' + str(i)
                 name = '标签' + str(i)
                 tag_background_fields.append(tag_background_filed)
-                tag=Tag(
+                tag = Tag(
                     name=name,
                     background_field=tag_background_filed,
                     # author_id=random.randint(1,9),
@@ -98,10 +98,8 @@ def register_commands(app):
             db.session.commit()
             click.echo('Created 5 tags')
 
-
-
         def fake_messages(count):
-            for i in range(count*5):
+            for i in range(count * 5):
                 message = Message(
                     user_id=random.randint(1, 9),
                     body=fake.text(),
@@ -109,19 +107,18 @@ def register_commands(app):
                 )
                 db.session.add(message)
             db.session.commit()
-            click.echo('Created {} messages'.format(count*5))
+            click.echo('Created {} messages'.format(count * 5))
 
         def fake_comments(count):
-            for i in range(count*20):
-                comment= Comment(
+            for i in range(count * 20):
+                comment = Comment(
                     user_id=random.randint(1, 9),
                     body=fake.text(),
                     create_time=fake.unix_time()
                 )
                 db.session.add(comment)
             db.session.commit()
-            click.echo('created {} comments'.format(count*20))
-
+            click.echo('created {} comments'.format(count * 20))
 
         def fake_articles(count):
             for i in range(count * 12):
@@ -129,15 +126,14 @@ def register_commands(app):
                     title=fake.text(20),
                     body=fake.text(1000),
                     summary=fake.text(50),
-                    category_field=random.randint(1,5),
-                    tag_field=random.randint(1,5),
+                    category_field=random.randint(1, 5),
+                    tag_field=random.randint(1, 5),
                     author_id=random.randint(1, 10),
                     create_time=fake.unix_time()
                 )
                 db.session.add(article)
             db.session.commit()
             click.echo('created {} articles'.format(count * 12))
-
 
         fake_users(count)
         fake_categorys()
@@ -147,3 +143,30 @@ def register_commands(app):
         fake_comments(count)
 
         click.echo('finished...')
+
+    @app.cli.command()
+    def sql2es():
+        """migrate data form sql to elasticsearch"""
+        click.echo("开始迁移数据")
+        from blog.helpers.elastic import ESArticle
+        with app.app_context():
+            n = 0
+            articles = Article.query.all()
+            for article in articles:
+                post = ESArticle.turn_es(article)
+                post.from_sql(article)
+                n += 1
+                click.echo("文章{} — — 迁移成功".format(post.meta.id))
+        click.echo("迁移完成,一共完成{}条记录的迁移".format(n))
+
+    @app.cli.command()
+    def es():
+        '''初始化Document模型'''
+        from elasticsearch_dsl.exceptions import IllegalOperation
+        from blog.helpers.elastic import ESArticle
+        try:
+            ESArticle.init()
+        except IllegalOperation:
+            click.echo('{} 已经初始化，无需进行初始化'.format(ESArticle.__name__))
+        else:
+            click.echo('初始化{}成功'.format(ESArticle.__name__))
