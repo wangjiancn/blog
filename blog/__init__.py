@@ -4,7 +4,7 @@ import os
 from flask import Flask
 
 from blog.config import config_map
-from blog.helpers.extensions import loginmanager, init_login_manager
+from blog.helpers.extensions import loginmanager, init_login_manager, migrate
 from blog.helpers.extensions import mail, ckeditor, cache
 from blog.models.base import db
 
@@ -20,6 +20,7 @@ def create_app(config_name=None):
     init_login_manager(app)
     # mail.init_app(app)
     db.init_app(app)
+    migrate.init_app(app,db)
     with app.app_context():
         db.create_all()
 

@@ -1,0 +1,4 @@
+Generic single-database configuration.
+
+
+Flask-Migrate使用flask db init命令初始化生成的文件夹，用于存放迁移历史、迁移脚本等文件

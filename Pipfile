@@ -18,6 +18,7 @@ flask-ckeditor = "*"
 pymysql = "*"
 flask = "*"
 watchdog = {version = "*", index = "douban"}
+flask-migrate = "*"
 
 [dev-packages]
 faker = "*"
